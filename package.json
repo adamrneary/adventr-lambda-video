@@ -1,0 +1,18 @@
+{
+  "name": "adventr-lambda-video",
+  "version": "0.0.0",
+  "description": "Initial lambda functions for Adventr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Neary <contact@adamrneary.com> (http://adamrneary.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "async": "^0.9.0",
+    "firebase": "^2.0.6"
+  },
+  "dependencies": {
+    "dotenv": "^0.4.0"
+  }
+}
