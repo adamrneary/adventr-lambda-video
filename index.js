@@ -9,8 +9,8 @@ exports.handler = function(event, context) {
   // a private function.
   function handlePayload(record, callback) {
     encodedPayload = record.kinesis.data;
-    rawPayload = new Buffer(encodedPayload, 'base64').toString('ascii');
-    handleData(JSON.parse(rawPayload), callback)
+    rawPayload = new Buffer(encodedPayload, 'base64').toString('utf-8');
+    handleData(JSON.parse(rawPayload), callback);
   }
 
   // The Kinesis event may contain multiple records in a specific order.
@@ -19,10 +19,14 @@ exports.handler = function(event, context) {
   async.eachSeries(event.Records, handlePayload, context.done)
 };
 
-// This is just an intermediate function
+// This is just an intermediate function. The projectId is buried in an
+// analyticsId of the format clientId-projectId-version. So the string split
+// extracts the projectId.
 function handleData(data, callback) {
   var projectRef = getProjectRef();
-  incrementProjectEvent(projectRef, data.projectId, data.eventName, callback);
+  var analyticsId = JSON.parse(data.properties).analyticsId;
+  var projectId = analyticsId.split('-')[1]
+  incrementProjectEvent(projectRef, projectId, data.event, callback);
 };
 
 
