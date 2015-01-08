@@ -1,6 +1,6 @@
 var dotenv = require('dotenv');
 var Firebase = require('firebase');
-var assert = require('chai').assert;
+var assert = require("assert");
 var VideoEvents = require('../index');
 
 dotenv.load();
