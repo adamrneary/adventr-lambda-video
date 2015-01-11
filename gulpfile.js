@@ -1,9 +1,11 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var del = require('del');
 var rename = require('gulp-rename');
 var install = require('gulp-install');
 var zip = require('gulp-zip');
 var AWS = require('aws-sdk');
+var fs = require('fs');
 var runSequence = require('run-sequence');
 
 // First we need to clean out the dist folder and remove the compiled zip file.
@@ -47,27 +49,29 @@ gulp.task('zip', function() {
 // This will be the case if you have installed and configured the AWS CLI. See
 // the README for more details.
 gulp.task('upload', function() {
+
+  // TODO: This should probably pull from package.json
+  AWS.config.region = 'us-east-1';
   var lambda = new AWS.Lambda();
+  var functionName = 'video-events';
 
-  // NOTE: We need to define deploy_function and
-
-  lambda.getFunction({FunctionName: deploy_function}, function(err, data) {
+  lambda.getFunction({FunctionName: functionName}, function(err, data) {
     if (err) {
       if (err.statusCode === 404) {
         var warning = 'Unable to find lambda function ' + deploy_function + '. '
         warning += 'Verify the lambda function name and AWS region are correct.'
-        gulp.fail.warn(warning);
+        gutil.log(warning);
       } else {
         var warning = 'AWS API request failed. '
         warning += 'Check your AWS credentials and permissions.'
-        gulp.fail.warn(warning);
+        gutil.log(warning);
       }
     }
 
     // This is a bit silly, simply because these five parameters are required.
     var current = data.Configuration;
     var params = {
-      FunctionName: deploy_function,
+      FunctionName: functionName,
       Handler: current.Handler,
       Mode: current.Mode,
       Role: current.Role,
@@ -80,7 +84,7 @@ gulp.task('upload', function() {
         if (err) {
           var warning = 'Package upload failed. '
           warning += 'Check your iam:PassRole permissions.'
-          gulp.fail.warn(warning);
+          gutil.log(warning);
         }
       });
     });
