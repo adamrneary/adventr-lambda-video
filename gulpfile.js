@@ -45,9 +45,10 @@ gulp.task('zip', function() {
 // Per the gulp guidelines, we do not need a plugin for something that can be
 // done easily with an existing node module. #CodeOverConfig
 //
-// Note: This presumes that AWS.config already has credentials, a region, etc.
-// This will be the case if you have installed and configured the AWS CLI. See
-// the README for more details.
+// Note: This presumes that AWS.config already has credentials. This will be
+// the case if you have installed and configured the AWS CLI.
+//
+// See http://aws.amazon.com/sdk-for-node-js/
 gulp.task('upload', function() {
 
   // TODO: This should probably pull from package.json
